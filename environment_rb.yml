@@ -3,15 +3,6 @@ channels:
   - conda-forge
 dependencies:
   - pip
-  - pip:
-    - -e .
-    - flake8-isort==2.7.0
-    - natcap.invest==3.8.0
-    - git+https://github.com/woodcrafty/PyETo.git@0b7ac9f149f4c89c5b5759a875010c521aa07f0f
-    - invest-ucm-calibration==0.3.1
-    - pylandsat==0.2
-    - salem==0.2.4
-    - git+https://github.com/martibosch/swiss-uhi-utils.git@60858761427d2e82894162d0434979b24c64238b
   - setuptools
   - wheel
   - click
