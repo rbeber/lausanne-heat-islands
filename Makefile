@@ -200,7 +200,7 @@ $(DHM200_DIR): | $(DATA_RAW_DIR)
 $(DHM200_DIR)/%.zip: | $(DHM200_DIR)
 	wget $(DHM200_URI) -O $@
 $(DHM200_DIR)/%.asc: $(DHM200_DIR)/%.zip
-	unzip -j $< 'data/DHM200*' -d $(DHM200_DIR)
+	unzip -j $< -d $(DHM200_DIR)
 	touch $@
 #### reproject ASCII grid. See https://bit.ly/2WEBxoL
 TEMP_VRT := $(DATA_INTERIM_DIR)/temp.vrt

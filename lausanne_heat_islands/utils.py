@@ -7,6 +7,10 @@ from matplotlib import colors
 from shapely import geometry
 from sklearn import metrics
 
+
+import xarray as xr
+from rasterio import transform
+
 # Swiss CRS
 CRS = 'epsg:2056'
 
@@ -197,3 +201,25 @@ def plot_comparison_hists(T_diff_da, station_tair_df):
     # axin2.set_xlabel('')
 
     return fig
+
+def _calculate_transform(geom, dst_res):
+    west, south, east, north = geom.bounds
+    dst_height, dst_width = tuple(
+        int(np.ceil(diff / dst_res)) for diff in [north - south, east - west])
+    dst_transform = transform.from_origin(west, north, dst_res, dst_res)
+
+    return dst_transform, (dst_height, dst_width)
+
+def get_ref_da(ref_geom, dst_res, dst_fill=0, dst_crs=None):
+    if dst_crs is None:
+        dst_crs = CRS
+    ref_transform, (ref_height,
+                    ref_width) = _calculate_transform(ref_geom, dst_res)
+    rows = np.arange(ref_height)
+    cols = np.arange(ref_width)
+    xs, _ = transform.xy(ref_transform, cols, cols)
+    _, ys = transform.xy(ref_transform, rows, rows)
+    ref_da = xr.DataArray(dst_fill, dims=('y', 'x'), coords={'y': ys, 'x': xs})
+    ref_da.attrs['pyproj_srs'] = dst_crs
+
+    return ref_da
