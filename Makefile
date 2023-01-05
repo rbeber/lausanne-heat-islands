@@ -1,6 +1,6 @@
 .PHONY: biophysical_table_shade station_measurements landsat_features \
 	regression_df regressor swiss_dem tair_regr_maps ref_et calibrate_ucm \
-	tair_ucm_maps download_zenodo_data
+	tair_ucm_maps download_zenodo_data download_tree_canopy dwn_station_location
 
 
 #################################################################################
@@ -90,6 +90,8 @@ $(BIOPHYSICAL_TABLE_SHADE_CSV): $(AGGLOM_LULC_TIF) $(TREE_CANOPY_TIF) \
 		$(TREE_CANOPY_TIF) $(BIOPHYSICAL_TABLE_CSV) $@
 biophysical_table_shade: $(BIOPHYSICAL_TABLE_SHADE_CSV)
 
+download_tree_canopy: $(TREE_CANOPY_TIF)
+
 
 #################################################################################
 # STATIONS
@@ -131,7 +133,7 @@ $(STATION_TAIR_CSV): $(LANDSAT_TILES_CSV) $(STATION_RAW_FILEPATHS) \
 	python $(MAKE_STATION_TAIR_DF_PY) $(LANDSAT_TILES_CSV) \
 		$(STATION_RAW_DIR) $@
 station_measurements: $(STATION_TAIR_CSV)
-
+dwn_station_location: $(STATION_LOCATIONS_CSV)
 
 #################################################################################
 # REGRESSION
@@ -262,7 +264,7 @@ MAKE_TAIR_UCM_MAPS_PY := $(CODE_INVEST_DIR)/make_tair_ucm_maps.py
 
 ### rules
 $(TAIR_UCM_MAPS_NC): $(CALIBRATED_PARAMS_JSON) $(AGGLOM_EXTENT_SHP) \
-	$(AGGLOM_LULC_TIF) $(BIOPHYSICAL_TABLE_SHADE_CSV) $(REF_ET_NC) \
+	$(AGGLOM_LULC_TIF) $(BIOPHYSICAL_TABLE_SHADE_CSV) $(REF_ET_NC) \DATA_RAW_DIR
 	$(STATION_TAIR_CSV) $(STATION_LOCATIONS_CSV) $(MAKE_TAIR_UCM_MAPS_PY) \
 	| $(DATA_PROCESSED_DIR)
 	python $(MAKE_TAIR_UCM_MAPS_PY) $(CALIBRATED_PARAMS_JSON) \

@@ -1,4 +1,4 @@
-name: uhi_ch_less1
+name: uhi_ch1
 channels:
   - conda-forge
 dependencies:
